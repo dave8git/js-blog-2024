@@ -116,6 +116,10 @@ body {
 
 .post-author {
     font-style: italic;
+    li {
+        display: inline-block;
+        list-style-type: none;
+    }
 }
 
 .post-tags {
@@ -124,4 +128,63 @@ body {
     p {
         margin: 0 10px 0 0;
     }
+}
+
+.tags li {
+    display: inline-block;
+}
+
+.tag-size-1 {
+
+    color: yellowgreen;
+    font-weight: bold;
+    display: inline-block;
+    font-style: none;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.tag-size-2 {
+    display: inline-block;
+    color: rgb(205, 50, 109);
+    font-weight: bold;
+    display: inline;
+    text-decoration: none;
+    font-size: 24px;
+}
+
+.tag-size-3 {
+    display: inline-block;
+    color: rgb(50, 187, 205);
+    font-weight: bold;
+    display: inline;
+    text-decoration: none;
+    font-size: 27px;
+}
+
+.tag-size-4 {
+    display: inline-block;
+    color: rgb(205, 156, 50);
+    font-weight: bold;
+    display: inline;
+    text-decoration: none;
+    font-size: 34px;
+}
+
+.tag-size-5 {
+    display: inline-block;
+    color: rgb(11, 49, 65);
+    font-weight: bold;
+    display: inline;
+    text-decoration: none;
+    font-size: 26px;
+}
+
+.tag-size-6 {
+    display: inline-block;
+    color: rgb(205, 50, 109);
+    font-weight: bold;
+    display: inline;
+    text-decoration: none;
+    font-size: 28px;
 }

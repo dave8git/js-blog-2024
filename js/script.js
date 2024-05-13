@@ -15,11 +15,15 @@ const titleClickHandler = function (event) {
 
 const optLinksSelector = '.titles';
 const optPostSelector = '.post';
+const optAuthorListSelector = '.authors';
 const optArticleTitleSelector = '.post-title';
 const optArticleTagsSelector = '.post-tags .list';
+const optTagsListselector = '.tags';
 const optTagLink = 'a[href^="#tag-"]';
 const optAuthorLink = 'a[href^="#author-"]';
 const optPostAuthor = '.post-author';
+const optCloudClassCount = '5';
+const optCloudClassPrefix = 'tag-size-';
 
 const generateTitleLinks = function (customSelector = '') {
     let titleList = document.querySelector(optLinksSelector);
@@ -52,22 +56,78 @@ const generateTitleLinks = function (customSelector = '') {
 
 generateTitleLinks(); 
 
+function calculateTagsParams(tagsParams) {
+    let highestValue = 0;
+    let smallestValue = 9999999;
+
+    const tagsWeighed = {max: highestValue, min: smallestValue};
+
+    for (const key in tagsParams) {
+        if (tagsParams.hasOwnProperty(key)) {
+            const value = tagsParams[key];
+
+            if (value > tagsWeighed.max) {
+                tagsWeighed.max = tagsParams[key];
+            } 
+
+            if (value < tagsWeighed.min) {
+                tagsWeighed.min = tagsParams[key];
+            }
+            console.log(tagsWeighed);
+        }
+    }
+    console.log('tagsWeighed', tagsWeighed);
+    return tagsWeighed;
+}
+
+function calculateTagClass(count, params) {
+    return Math.floor( ( (count - params.min) / (params.max - params.min) ) * optCloudClassCount + 1 );
+}
+
 function generateTags(){
     const allArticles = document.querySelectorAll(optPostSelector);
-
+    let allTags = {};
     allArticles.forEach((article) => {
         const articleTag = article.querySelector(optArticleTagsSelector);
         let html = '';
         const tags = article.getAttribute('data-tags').split(' ');
         tags.forEach((tag) => {
             console.log('tag', tag);
-            html += ' <li><a href="#tag-'+tag+'">' + tag + '</a></li>';
+            let htmlLink = ' <li><a href="#tag-'+tag+'">' + tag + '</a></li>';
+            html += htmlLink;
+            if(!allTags[tag]){ 
+                allTags[tag] = 1;
+            } else {
+                allTags[tag]++;
+            }
+            
         })
-        console.log('tags', tags);
-        console.log('html', html);
         articleTag.insertAdjacentHTML('beforeend', html);
+        const tagList = document.querySelector(optTagsListselector);
+        // tagList.innerHTML = allTags.join(' ');
 
+        const tagsParams = calculateTagsParams(allTags);
+        console.log('tagsParams:', tagsParams);
+
+        let allTagsHTML = '';
+    
+        for(let tag in allTags) {
+            // let tagLinkHTML = tag + ' (' + allTags[tag] + ') ';
+            let tagLinkHTML = ' <li><a class="tag-size-'+ calculateTagClass(allTags[tag], tagsParams)+'" href="#tag-'+tag+'">' + tag + /* allTags[tag] + */ '</a></li> ';
+            allTagsHTML += tagLinkHTML;
+            console.log('calculateTagClass(allTags[tag], tagsParams)',calculateTagClass(allTags[tag], tagsParams));
+            // console.log('tag', tag);
+            // console.log('allTags[tag]', allTags[tag]);
+            // console.log('params', tagsParams);
+        }
+    
+        tagList.innerHTML = allTagsHTML;
+        
+       
     })
+    
+    
+   
   }
   
   generateTags();
@@ -96,13 +156,31 @@ function generateTags(){
 
   function generateAuthors() {
     const allArticles = document.querySelectorAll(optPostSelector);
+    const allAuthors = [];
+    let html = '';
     allArticles.forEach((article) => {
-        const authorContainer = article.querySelector(optPostAuthor);
-        let html = '';
         const author = article.getAttribute('data-author');
-        html = '<a href="#author-'+author+'"> '+author+'</a>';
-        authorContainer.insertAdjacentHTML('beforeend', html);
-    })
+        let htmlLink = ' <li><a href="#author-'+author+'"> '+author+'</a></li>';
+        html += htmlLink;
+        const authorContainer = article.querySelector(optPostAuthor);
+        authorContainer.insertAdjacentHTML('beforeend', htmlLink);
+
+        if(allAuthors.indexOf(htmlLink) == -1) {
+            allAuthors.push(htmlLink);
+        };
+
+        //console.log('allAuthors', allAuthors);
+    });
+  
+    const authorListContainer = document.querySelector(optAuthorListSelector);
+
+    authorListContainer.innerHTML = allAuthors.join(' ');
+    // authorListContainer.insertAdjacentHTML('beforebegin', htmlLink);
+    // console.log(html);
+    // const allAuthorsHTML = '';
+
+
+
   }
 
   generateAuthors();
